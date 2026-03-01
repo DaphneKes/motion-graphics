@@ -255,61 +255,63 @@
        (desktop unchanged)
        ========================= */
     @media (max-width: 980px){
-      :root{
-        --content-pad: 18px;
-        --row-gap: 64px; /* spacing between projects */
-      }
+  :root{
+    --content-pad: 18px;
+    --row-gap: 64px; /* spacing between projects */
+  }
 
-      .meta{
-        white-space: normal;
-        gap: 10px;
-      }
+  .meta{
+    white-space: normal;
+    gap: 10px;
+  }
 
-      .title img{
-        max-width: 420px;
-      }
+  .title img{
+    max-width: 420px;
+  }
 
-      /* each project becomes a 1-col stack: media then card */
-      .project{
-        grid-template-columns: 1fr;
-        column-gap: 0;
-        row-gap: 14px;           /* space between media + card */
-        margin-bottom: var(--row-gap);
-      }
+  /* each project becomes a 1-col stack: media then card */
+  .project{
+    grid-template-columns: 1fr;
+    column-gap: 0;
+    row-gap: 14px;         /* space between media + card */
+    margin-bottom: var(--row-gap);
+  }
 
-      .project .media{ grid-column: 1; order: 1; }
-      .project .card { grid-column: 1; order: 2; }
+  .project .media{ grid-column: 1; order: 1; }
+  .project .card { grid-column: 1; order: 2; }
 
-      /* make ALL media consistent on mobile */
-      .media{
-        aspect-ratio: 16 / 9;    /* consistent, clean */
-      }
+  /* ✅ DO NOT force 16:9 */
+  .media{
+    aspect-ratio: unset !important;
+    height: clamp(240px, 62vw, 520px); /* responsive height, width stays 100% */
+  }
 
-      /* even if something is vertical on desktop, on mobile keep same width + consistent ratio */
-      .media.vertical{
-        aspect-ratio: 16 / 9 !important;
-      }
+  /* if something is vertical-ish, give it more height on mobile */
+  .media.vertical{
+    aspect-ratio: unset !important;
+    height: clamp(420px, 105vw, 760px);
+  }
 
-      /* footer stacking */
-      .footer-top{
-        flex-direction: column;
-        gap: 10px;
-      }
-      .footer-top .center,
-      .footer-top .right{
-        text-align:left;
-        white-space: normal;
-      }
-      .footer-bottom{
-        flex-direction: column;
-        align-items:flex-start;
-        gap: 8px;
-      }
-      .footer-bottom .small-right{
-        text-align:left;
-        white-space: normal;
-      }
-    }
+  /* footer stacking */
+  .footer-top{
+    flex-direction: column;
+    gap: 10px;
+  }
+  .footer-top .center,
+  .footer-top .right{
+    text-align:left;
+    white-space: normal;
+  }
+  .footer-bottom{
+    flex-direction: column;
+    align-items:flex-start;
+    gap: 8px;
+  }
+  .footer-bottom .small-right{
+    text-align:left;
+    white-space: normal;
+  }
+}
   </style>
 </head>
 
