@@ -263,38 +263,77 @@
 
     /* responsive */
     @media (max-width: 980px){
-      .grid{ grid-template-columns: 1fr; }
-      .media-left,.card-right,.card-left,.media-right{ grid-column: 1; }
-      .card{ max-width: 520px; }
-      .media{ aspect-ratio: 16 / 10; }
+  :root{
+    --content-pad: 18px;
+    --row-gap: 90px;
+  }
 
-      /* keep vertical videos vertical on mobile too */
-      .media.vertical{
-        aspect-ratio: 9 / 16 !important;
-      }
+  .meta{
+    white-space: normal;
+    gap: 10px;
+  }
 
-      .title img{ max-width: 460px; }
-      .meta{ white-space: normal; }
+  .grid{
+    grid-template-columns: 1fr;
+    column-gap: 0;
+    row-gap: var(--row-gap);
+  }
 
-      .footer-top{
-        flex-direction: column;
-        gap: 8px;
-      }
-      .footer-top .center,
-      .footer-top .right{
-        text-align:left;
-        white-space: normal;
-      }
-      .footer-bottom{
-        flex-direction: column;
-        align-items:flex-start;
-        gap: 8px;
-      }
-      .footer-bottom .small-right{
-        text-align:left;
-        white-space: normal;
-      }
-    }
+  /* all items become full width */
+  .media-left, .media-right, .card-left, .card-right{
+    grid-column: 1;
+  }
+
+  /* IMPORTANT: do NOT force a random aspect ratio on mobile */
+  .media{
+    aspect-ratio: auto;      /* let height be natural */
+    height: auto;
+  }
+
+  /* square items: keep them square */
+  .media.square{
+    aspect-ratio: 1 / 1;
+  }
+
+  /* vertical items: keep them vertical */
+  .media.vertical{
+    aspect-ratio: 9 / 16 !important;
+  }
+
+  /* default “normal” widescreen if you want some to be landscape */
+  .media.wide{
+    aspect-ratio: 16 / 9;
+  }
+
+  /* make cards not look tiny */
+  .card{
+    max-width: 100%;
+  }
+
+  .title img{
+    max-width: 420px;
+  }
+
+  /* footer stacking */
+  .footer-top{
+    flex-direction: column;
+    gap: 10px;
+  }
+  .footer-top .center,
+  .footer-top .right{
+    text-align: left;
+    white-space: normal;
+  }
+  .footer-bottom{
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .footer-bottom .small-right{
+    text-align: left;
+    white-space: normal;
+  }
+}
   </style>
 </head>
 
