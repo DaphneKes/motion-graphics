@@ -128,27 +128,23 @@
       position:absolute;
       inset:0;
     }
+
+    /* make vimeo behave like object-fit: cover */
     .vimeo-wrapper iframe{
+      position:absolute;
+      top:50%;
+      left:50%;
       width:100%;
       height:100%;
       border:0;
       display:block;
+      transform: translate(-50%, -50%);
     }
 
-    /* make vimeo behave like object-fit: cover */
-.vimeo-wrapper iframe{
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 100%;
-  height: 100%;
-  transform: translate(-50%, -50%);
-}
-
-/* apply extra zoom ONLY when you want to remove black bars */
-.media.vimeo.cover .vimeo-wrapper iframe{
-  transform: translate(-50%, -50%) scale(1.35);
-}
+    /* apply extra zoom ONLY when you want to remove black bars */
+    .media.vimeo.cover .vimeo-wrapper iframe{
+      transform: translate(-50%, -50%) scale(1.35);
+    }
 
     /* card */
     .card{
@@ -323,9 +319,15 @@
 
       <section class="grid">
 
-        <!-- ROW 1 (Savvy Spoon stays as-is: local video) -->
-        <div class="media media-left">
-          <video src="animation-logo.mp4" autoplay loop muted playsinline></video>
+        <!-- ROW 1 (Savvy Spoon — FIXED: Vimeo embed, autoplay/loop/muted) -->
+        <div class="media media-left vimeo">
+          <div class="vimeo-wrapper">
+            <iframe
+              src="https://player.vimeo.com/video/1169309417?background=1&autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0"
+              allow="autoplay; fullscreen; picture-in-picture"
+              allowfullscreen>
+            </iframe>
+          </div>
         </div>
 
         <article class="card card-right">
@@ -468,7 +470,7 @@ The goal was to reflect the studio’s personality: bold, slightly geeky, and se
         <div class="media media-right vimeo cover">
           <div class="vimeo-wrapper">
             <iframe
-              src="https://player.vimeo.com/video/1169309640?background=1&autoplay=1&loop=1&muted=1"
+              src="https://player.vimeo.com/video/1169309640?background=1&autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0"
               allow="autoplay; fullscreen; picture-in-picture"
               allowfullscreen>
             </iframe>
