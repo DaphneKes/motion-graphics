@@ -80,15 +80,25 @@
       display:block;
     }
 
-    /* grid */
-    .grid{
-      width:100%;
+    /* === PROJECT STRUCTURE (desktop stays the same) === */
+    .projects{ display:block; }
+
+    .project{
       display:grid;
       grid-template-columns: minmax(0, 1fr) var(--card-w);
       column-gap: var(--col-gap);
-      row-gap: var(--row-gap);
+      row-gap: 0;
       align-items:start;
+      margin-bottom: var(--row-gap);
     }
+    .project:last-child{ margin-bottom: 0; }
+
+    /* desktop alternation */
+    .project--media-left .media{ grid-column:1; }
+    .project--media-left .card { grid-column:2; }
+
+    .project--media-right .card { grid-column:1; }
+    .project--media-right .media{ grid-column:2; }
 
     /* media blocks */
     .media{
@@ -99,6 +109,7 @@
       display:block;
       position: relative;
     }
+    .media.placeholder{ background:#9c9c9c; }
 
     /* local <video> */
     .media video{
@@ -108,28 +119,19 @@
       object-fit: cover;
     }
 
-    .media.placeholder{ background:#9c9c9c; }
-
-    /* vertical media (9:16) */
+    /* vertical media (9:16) on desktop only */
     .media.vertical{
       aspect-ratio: 9 / 16 !important;
     }
 
-    /* show whole video without cropping (for specific local videos) */
-    .fit-contain{
-      object-fit: contain !important;
-    }
-
     /* Vimeo embeds */
-    .media.vimeo{
-      background:#000;
-    }
+    .media.vimeo{ background:#000; }
     .vimeo-wrapper{
       position:absolute;
       inset:0;
     }
 
-    /* make vimeo behave like object-fit: cover */
+    /* Vimeo = behave like object-fit: cover (no black bars) */
     .vimeo-wrapper iframe{
       position:absolute;
       top:50%;
@@ -138,10 +140,10 @@
       height:100%;
       border:0;
       display:block;
-      transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%) scale(1.12); /* default: slight zoom to remove bars */
     }
 
-    /* apply extra zoom ONLY when you want to remove black bars */
+    /* extra zoom ONLY when you want it (Nerdink) */
     .media.vimeo.cover .vimeo-wrapper iframe{
       transform: translate(-50%, -50%) scale(1.35);
     }
@@ -179,7 +181,7 @@
       color: #2b2b2b;
       margin: 0 0 12px;
       max-width: 42ch;
-      white-space: pre-line; /* keeps your line breaks */
+      white-space: pre-line;
     }
     .software{
       font-size: 11px;
@@ -188,16 +190,8 @@
     }
     .software b{ font-weight: 700; }
 
-    /* row helper classes */
-    .media-left { grid-column: 1; }
-    .card-right { grid-column: 2; }
-
-    .card-left  { grid-column: 1; }
-    .media-right{ grid-column: 2; }
-
     /* FOOTER (same vibe as header) */
     .footer{ padding:0; }
-
     .footer .wrap{
       padding-top: 14px;
       padding-bottom: 24px;
@@ -211,7 +205,6 @@
       font-size: 12px;
       line-height: 1.15;
     }
-
     .footer-top .center{
       text-align:center;
       opacity:.9;
@@ -222,9 +215,7 @@
       white-space: nowrap;
     }
 
-    .footer-portfolio{
-      margin-top: 28px;
-    }
+    .footer-portfolio{ margin-top: 28px; }
     .footer-portfolio a{
       font-size: 13px;
       font-weight: 600;
@@ -235,9 +226,7 @@
       display: inline-block;
       transition: opacity .2s ease;
     }
-    .footer-portfolio a:hover{
-      opacity: .6;
-    }
+    .footer-portfolio a:hover{ opacity: .6; }
 
     .footer-bottom{
       display:flex;
@@ -261,79 +250,66 @@
       width: 100%;
     }
 
-    /* responsive */
+    /* =========================
+       MOBILE: video then textbox, same width, no black bars
+       (desktop unchanged)
+       ========================= */
     @media (max-width: 980px){
-  :root{
-    --content-pad: 18px;
-    --row-gap: 90px;
-  }
+      :root{
+        --content-pad: 18px;
+        --row-gap: 64px; /* spacing between projects */
+      }
 
-  .meta{
-    white-space: normal;
-    gap: 10px;
-  }
+      .meta{
+        white-space: normal;
+        gap: 10px;
+      }
 
-  .grid{
-    grid-template-columns: 1fr;
-    column-gap: 0;
-    row-gap: var(--row-gap);
-  }
+      .title img{
+        max-width: 420px;
+      }
 
-  /* all items become full width */
-  .media-left, .media-right, .card-left, .card-right{
-    grid-column: 1;
-  }
+      /* each project becomes a 1-col stack: media then card */
+      .project{
+        grid-template-columns: 1fr;
+        column-gap: 0;
+        row-gap: 14px;           /* space between media + card */
+        margin-bottom: var(--row-gap);
+      }
 
-  /* IMPORTANT: do NOT force a random aspect ratio on mobile */
-  .media{
-    aspect-ratio: auto;      /* let height be natural */
-    height: auto;
-  }
+      .project .media{ grid-column: 1; order: 1; }
+      .project .card { grid-column: 1; order: 2; }
 
-  /* square items: keep them square */
-  .media.square{
-    aspect-ratio: 1 / 1;
-  }
+      /* make ALL media consistent on mobile */
+      .media{
+        aspect-ratio: 16 / 9;    /* consistent, clean */
+      }
 
-  /* vertical items: keep them vertical */
-  .media.vertical{
-    aspect-ratio: 9 / 16 !important;
-  }
+      /* even if something is vertical on desktop, on mobile keep same width + consistent ratio */
+      .media.vertical{
+        aspect-ratio: 16 / 9 !important;
+      }
 
-  /* default “normal” widescreen if you want some to be landscape */
-  .media.wide{
-    aspect-ratio: 16 / 9;
-  }
-
-  /* make cards not look tiny */
-  .card{
-    max-width: 100%;
-  }
-
-  .title img{
-    max-width: 420px;
-  }
-
-  /* footer stacking */
-  .footer-top{
-    flex-direction: column;
-    gap: 10px;
-  }
-  .footer-top .center,
-  .footer-top .right{
-    text-align: left;
-    white-space: normal;
-  }
-  .footer-bottom{
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-  }
-  .footer-bottom .small-right{
-    text-align: left;
-    white-space: normal;
-  }
-}
+      /* footer stacking */
+      .footer-top{
+        flex-direction: column;
+        gap: 10px;
+      }
+      .footer-top .center,
+      .footer-top .right{
+        text-align:left;
+        white-space: normal;
+      }
+      .footer-bottom{
+        flex-direction: column;
+        align-items:flex-start;
+        gap: 8px;
+      }
+      .footer-bottom .small-right{
+        text-align:left;
+        white-space: normal;
+      }
+    }
   </style>
 </head>
 
@@ -356,221 +332,221 @@
         <img src="title.png" alt="A collection of Motion graphics" />
       </section>
 
-      <section class="grid">
+      <section class="projects">
 
-        <!-- ROW 1 (Savvy Spoon — FIXED: Vimeo embed, autoplay/loop/muted) -->
-        <div class="media media-left vimeo">
-          <div class="vimeo-wrapper">
-            <iframe
-              src="https://player.vimeo.com/video/1169309417?background=1&autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0"
-              allow="autoplay; fullscreen; picture-in-picture"
-              allowfullscreen>
-            </iframe>
+        <!-- PROJECT 1 (Savvy Spoon — Vimeo) -->
+        <section class="project project--media-left">
+          <div class="media vimeo">
+            <div class="vimeo-wrapper">
+              <iframe
+                src="https://player.vimeo.com/video/1169309417?background=1&autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0"
+                allow="autoplay; fullscreen; picture-in-picture"
+                allowfullscreen>
+              </iframe>
+            </div>
           </div>
-        </div>
 
-        <article class="card card-right">
-          <div class="pad">
-            <p class="label">Project title</p>
-            <h3 class="project-title">Logo animation</h3>
-          </div>
-          <div class="divider"></div>
-          <div class="pad">
-            <p class="label">Description</p>
-            <p class="desc">
-A short logo animation for Savvy Spoon. Clean timing, simple motion, and a clear brand reveal for quick digital use.
-            </p>
-            <p class="software">Software: <b>After Effects, Illustrator</b></p>
-          </div>
-        </article>
+          <article class="card">
+            <div class="pad">
+              <p class="label">Project title</p>
+              <h3 class="project-title">Logo animation</h3>
+            </div>
+            <div class="divider"></div>
+            <div class="pad">
+              <p class="label">Description</p>
+              <p class="desc">A short logo animation for Savvy Spoon. Clean timing, simple motion, and a clear brand reveal for quick digital use.</p>
+              <p class="software">Software: <b>After Effects, Illustrator</b></p>
+            </div>
+          </article>
+        </section>
 
-        <!-- ROW 2 (Day to night — Vimeo) -->
-        <article class="card card-left">
-          <div class="pad">
-            <p class="label">Project title</p>
-            <h3 class="project-title">Day-to-night animated doodle</h3>
-          </div>
-          <div class="divider"></div>
-          <div class="pad">
-            <p class="label">Description</p>
-            <p class="desc">
-Minimal transition from day to night using light, color and subtle motion shifts. Designed to feel smooth and atmospheric without overcomplicating the scene.
-            </p>
-            <p class="software">Software: <b>After Effects, Procreate</b></p>
-          </div>
-        </article>
+        <!-- PROJECT 2 (Day to night — Vimeo) -->
+        <section class="project project--media-right">
+          <article class="card">
+            <div class="pad">
+              <p class="label">Project title</p>
+              <h3 class="project-title">Day-to-night animated doodle</h3>
+            </div>
+            <div class="divider"></div>
+            <div class="pad">
+              <p class="label">Description</p>
+              <p class="desc">Minimal transition from day to night using light, color and subtle motion shifts. Designed to feel smooth and atmospheric without overcomplicating the scene.</p>
+              <p class="software">Software: <b>After Effects, Procreate</b></p>
+            </div>
+          </article>
 
-        <div class="media media-right vimeo">
-          <div class="vimeo-wrapper">
-            <iframe
-              src="https://player.vimeo.com/video/1169309875?background=1&autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0"
-              allow="autoplay; fullscreen; picture-in-picture"
-              allowfullscreen>
-            </iframe>
+          <div class="media vimeo">
+            <div class="vimeo-wrapper">
+              <iframe
+                src="https://player.vimeo.com/video/1169309875?background=1&autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0"
+                allow="autoplay; fullscreen; picture-in-picture"
+                allowfullscreen>
+              </iframe>
+            </div>
           </div>
-        </div>
+        </section>
 
-        <!-- ROW 3 (Personal promo — Vimeo) -->
-        <div class="media media-left vimeo">
-          <div class="vimeo-wrapper">
-            <iframe
-              src="https://player.vimeo.com/video/959041556?background=1&autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0"
-              allow="autoplay; fullscreen; picture-in-picture"
-              allowfullscreen>
-            </iframe>
+        <!-- PROJECT 3 (Personal promo — Vimeo) -->
+        <section class="project project--media-left">
+          <div class="media vimeo">
+            <div class="vimeo-wrapper">
+              <iframe
+                src="https://player.vimeo.com/video/959041556?background=1&autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0"
+                allow="autoplay; fullscreen; picture-in-picture"
+                allowfullscreen>
+              </iframe>
+            </div>
           </div>
-        </div>
 
-        <article class="card card-right">
-          <div class="pad">
-            <p class="label">Project title</p>
-            <h3 class="project-title">Personal promo animation</h3>
-          </div>
-          <div class="divider"></div>
-          <div class="pad">
-            <p class="label">Description</p>
-            <p class="desc">
-A short logo animation with clean timing and a simple reveal—built for quick digital use.
-            </p>
-            <p class="software">Software: <b>After Effects, Illustrator</b></p>
-          </div>
-        </article>
+          <article class="card">
+            <div class="pad">
+              <p class="label">Project title</p>
+              <h3 class="project-title">Personal promo animation</h3>
+            </div>
+            <div class="divider"></div>
+            <div class="pad">
+              <p class="label">Description</p>
+              <p class="desc">A short logo animation with clean timing and a simple reveal—built for quick digital use.</p>
+              <p class="software">Software: <b>After Effects, Illustrator</b></p>
+            </div>
+          </article>
+        </section>
 
-        <!-- ROW 4 (Delivery — Vimeo) -->
-        <article class="card card-left">
-          <div class="pad">
-            <p class="label">Project title</p>
-            <h3 class="project-title">Delivery animation</h3>
-          </div>
-          <div class="divider"></div>
-          <div class="pad">
-            <p class="label">Description</p>
-            <p class="desc">
-Short promotional animation structured for quick digital use. Clear typography, direct motion, and a tight timing curve to keep the message immediate.
-            </p>
-            <p class="software">Software: <b>After Effects, Illustrator</b></p>
-          </div>
-        </article>
+        <!-- PROJECT 4 (Delivery — Vimeo) -->
+        <section class="project project--media-right">
+          <article class="card">
+            <div class="pad">
+              <p class="label">Project title</p>
+              <h3 class="project-title">Delivery animation</h3>
+            </div>
+            <div class="divider"></div>
+            <div class="pad">
+              <p class="label">Description</p>
+              <p class="desc">Short promotional animation structured for quick digital use. Clear typography, direct motion, and a tight timing curve to keep the message immediate.</p>
+              <p class="software">Software: <b>After Effects, Illustrator</b></p>
+            </div>
+          </article>
 
-        <div class="media media-right vimeo">
-          <div class="vimeo-wrapper">
-            <iframe
-              src="https://player.vimeo.com/video/1004491875?background=1&autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0"
-              allow="autoplay; fullscreen; picture-in-picture"
-              allowfullscreen>
-            </iframe>
+          <div class="media vimeo">
+            <div class="vimeo-wrapper">
+              <iframe
+                src="https://player.vimeo.com/video/1004491875?background=1&autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0"
+                allow="autoplay; fullscreen; picture-in-picture"
+                allowfullscreen>
+              </iframe>
+            </div>
           </div>
-        </div>
+        </section>
 
-        <!-- ROW 5 (Character-based — Vimeo) -->
-        <div class="media media-left vimeo">
-          <div class="vimeo-wrapper">
-            <iframe
-              src="https://player.vimeo.com/video/959074069?background=1&autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0"
-              allow="autoplay; fullscreen; picture-in-picture"
-              allowfullscreen>
-            </iframe>
+        <!-- PROJECT 5 (Character-based — Vimeo) -->
+        <section class="project project--media-left">
+          <div class="media vimeo">
+            <div class="vimeo-wrapper">
+              <iframe
+                src="https://player.vimeo.com/video/959074069?background=1&autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0"
+                allow="autoplay; fullscreen; picture-in-picture"
+                allowfullscreen>
+              </iframe>
+            </div>
           </div>
-        </div>
 
-        <article class="card card-right">
-          <div class="pad">
-            <p class="label">Project title</p>
-            <h3 class="project-title">Character-based animation</h3>
-          </div>
-          <div class="divider"></div>
-          <div class="pad">
-            <p class="label">Description</p>
-            <p class="desc">
-A short logo animation with clean timing and a simple reveal—built for quick digital use.
-            </p>
-            <p class="software">Software: <b>After Effects, Illustrator</b></p>
-          </div>
-        </article>
+          <article class="card">
+            <div class="pad">
+              <p class="label">Project title</p>
+              <h3 class="project-title">Character-based animation</h3>
+            </div>
+            <div class="divider"></div>
+            <div class="pad">
+              <p class="label">Description</p>
+              <p class="desc">A short logo animation with clean timing and a simple reveal—built for quick digital use.</p>
+              <p class="software">Software: <b>After Effects, Illustrator</b></p>
+            </div>
+          </article>
+        </section>
 
-        <!-- ROW 6 (Nerdink — Vimeo) -->
-        <article class="card card-left">
-          <div class="pad">
-            <p class="label">Project title</p>
-            <h3 class="project-title">Logo animation</h3>
-          </div>
-          <div class="divider"></div>
-          <div class="pad">
-            <p class="label">Description</p>
-            <p class="desc">
-The motion builds around the “nerdy” elements of the logo — subtle character details, playful references, and sharp, confident typography. I kept the animation tight and intentional, letting the icons reveal themselves without overdoing the effects.
+        <!-- PROJECT 6 (Nerdink — Vimeo, extra zoom) -->
+        <section class="project project--media-right">
+          <article class="card">
+            <div class="pad">
+              <p class="label">Project title</p>
+              <h3 class="project-title">Logo animation</h3>
+            </div>
+            <div class="divider"></div>
+            <div class="pad">
+              <p class="label">Description</p>
+              <p class="desc">The motion builds around the “nerdy” elements of the logo — subtle character details, playful references, and sharp, confident typography. I kept the animation tight and intentional, letting the icons reveal themselves without overdoing the effects.
 
-The goal was to reflect the studio’s personality: bold, slightly geeky, and self-aware — while keeping the final result clean enough to work across reels, promos and digital intros.
-            </p>
-            <p class="software">Software: <b>After Effects, Illustrator</b></p>
-          </div>
-        </article>
+The goal was to reflect the studio’s personality: bold, slightly geeky, and self-aware — while keeping the final result clean enough to work across reels, promos and digital intros.</p>
+              <p class="software">Software: <b>After Effects, Illustrator</b></p>
+            </div>
+          </article>
 
-        <div class="media media-right vimeo cover">
-          <div class="vimeo-wrapper">
-            <iframe
-              src="https://player.vimeo.com/video/1169309640?background=1&autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0"
-              allow="autoplay; fullscreen; picture-in-picture"
-              allowfullscreen>
-            </iframe>
+          <div class="media vimeo cover">
+            <div class="vimeo-wrapper">
+              <iframe
+                src="https://player.vimeo.com/video/1169309640?background=1&autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0"
+                allow="autoplay; fullscreen; picture-in-picture"
+                allowfullscreen>
+              </iframe>
+            </div>
           </div>
-        </div>
+        </section>
 
-        <!-- ROW 7 (Email interaction — Vimeo) -->
-        <div class="media media-left vimeo">
-          <div class="vimeo-wrapper">
-            <iframe
-              src="https://player.vimeo.com/video/959074914?background=1&autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0"
-              allow="autoplay; fullscreen; picture-in-picture"
-              allowfullscreen>
-            </iframe>
+        <!-- PROJECT 7 (Email interaction — Vimeo) -->
+        <section class="project project--media-left">
+          <div class="media vimeo">
+            <div class="vimeo-wrapper">
+              <iframe
+                src="https://player.vimeo.com/video/959074914?background=1&autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0"
+                allow="autoplay; fullscreen; picture-in-picture"
+                allowfullscreen>
+              </iframe>
+            </div>
           </div>
-        </div>
 
-        <article class="card card-right">
-          <div class="pad">
-            <p class="label">Project title</p>
-            <h3 class="project-title">Email interaction animation</h3>
-          </div>
-          <div class="divider"></div>
-          <div class="pad">
-            <p class="label">Description</p>
-            <p class="desc">
-A playful motion piece built around everyday digital communication. Icons orbit and interact around the main message element, creating a light, friendly rhythm.
+          <article class="card">
+            <div class="pad">
+              <p class="label">Project title</p>
+              <h3 class="project-title">Email interaction animation</h3>
+            </div>
+            <div class="divider"></div>
+            <div class="pad">
+              <p class="label">Description</p>
+              <p class="desc">A playful motion piece built around everyday digital communication. Icons orbit and interact around the main message element, creating a light, friendly rhythm.
 
-The animation focuses on layering, soft depth, and smooth easing to keep the composition dynamic without feeling chaotic. Designed to feel approachable and clear — suitable for explainer videos, UI promos, or social content related to messaging and interaction.
-            </p>
-            <p class="software">Software: <b>After Effects, Illustrator</b></p>
-          </div>
-        </article>
+The animation focuses on layering, soft depth, and smooth easing to keep the composition dynamic without feeling chaotic. Designed to feel approachable and clear — suitable for explainer videos, UI promos, or social content related to messaging and interaction.</p>
+              <p class="software">Software: <b>After Effects, Illustrator</b></p>
+            </div>
+          </article>
+        </section>
 
-        <!-- ROW 8 (Motion tracking — Vimeo, vertical 9:16) -->
-        <article class="card card-left">
-          <div class="pad">
-            <p class="label">Project title</p>
-            <h3 class="project-title">Motion tracking</h3>
-          </div>
-          <div class="divider"></div>
-          <div class="pad">
-            <p class="label">Description</p>
-            <p class="desc">
-Text pinned in 3D space on drone footage for a simple “project in progress” callout. Short reel created for INSITE EPM where typography is tracked directly onto drone footage of an active construction site.
+        <!-- PROJECT 8 (Motion tracking — Vimeo) -->
+        <section class="project project--media-right">
+          <article class="card">
+            <div class="pad">
+              <p class="label">Project title</p>
+              <h3 class="project-title">Motion tracking</h3>
+            </div>
+            <div class="divider"></div>
+            <div class="pad">
+              <p class="label">Description</p>
+              <p class="desc">Text pinned in 3D space on drone footage for a simple “project in progress” callout. Short reel created for INSITE EPM where typography is tracked directly onto drone footage of an active construction site.
 
-The phrase “Project in progress” was pinned in 3D space to sit naturally on the building surface, following camera movement and perspective shifts. The goal was to keep it subtle and integrated — not flashy — so the message feels part of the environment rather than placed on top of it.
-            </p>
-            <p class="software">Software: <b>After Effects</b></p>
-          </div>
-        </article>
+The phrase “Project in progress” was pinned in 3D space to sit naturally on the building surface, following camera movement and perspective shifts. The goal was to keep it subtle and integrated — not flashy — so the message feels part of the environment rather than placed on top of it.</p>
+              <p class="software">Software: <b>After Effects</b></p>
+            </div>
+          </article>
 
-        <div class="media vertical media-right vimeo">
-          <div class="vimeo-wrapper">
-            <iframe
-              src="https://player.vimeo.com/video/1169309700?background=1&autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0"
-              allow="autoplay; fullscreen; picture-in-picture"
-              allowfullscreen>
-            </iframe>
+          <div class="media vimeo vertical">
+            <div class="vimeo-wrapper">
+              <iframe
+                src="https://player.vimeo.com/video/1169309700?background=1&autoplay=1&loop=1&muted=1&title=0&byline=0&portrait=0"
+                allow="autoplay; fullscreen; picture-in-picture"
+                allowfullscreen>
+              </iframe>
+            </div>
           </div>
-        </div>
+        </section>
 
       </section>
     </div>
@@ -593,24 +569,16 @@ The phrase “Project in progress” was pinned in 3D space to sit naturally on 
 
         <div class="right">
           <div>
-            <a href="mailto:dafnikes23@gmail.com" style="color:var(--ink); text-decoration:none;">
-              dafnikes23@gmail.com
-            </a>
+            <a href="mailto:dafnikes23@gmail.com" style="color:var(--ink); text-decoration:none;">dafnikes23@gmail.com</a>
           </div>
           <div style="margin-top:4px;">
-            <a href="tel:+306980903181" style="color:var(--ink); text-decoration:none;">
-              +30 6980903181
-            </a>
+            <a href="tel:+306980903181" style="color:var(--ink); text-decoration:none;">+30 6980903181</a>
           </div>
         </div>
       </div>
 
       <div class="footer-portfolio">
-        <a
-          href="https://drive.google.com/file/d/1x4NGAKVftGtDZZuPxEQvYDveqBA8dYkF/view?usp=share_link"
-          target="_blank"
-          rel="noopener"
-        >
+        <a href="https://drive.google.com/file/d/1x4NGAKVftGtDZZuPxEQvYDveqBA8dYkF/view?usp=share_link" target="_blank" rel="noopener">
           View full graphic design portfolio (PDF)
         </a>
       </div>
@@ -624,7 +592,6 @@ The phrase “Project in progress” was pinned in 3D space to sit naturally on 
     <div class="header-rule"></div>
   </footer>
 
-  <!-- extra white room under footer -->
   <div class="footer-spacer"></div>
 </body>
 </html>
